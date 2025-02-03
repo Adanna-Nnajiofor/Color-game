@@ -15,6 +15,7 @@ export default function ColorGame() {
   const [score, setScore] = useState(0);
   const [gameStatus, setGameStatus] = useState("");
   const [colorOptions, setColorOptions] = useState([]);
+  const [animationClass, setAnimationClass] = useState("");
 
   useEffect(() => {
     startNewGame();
@@ -27,14 +28,18 @@ export default function ColorGame() {
     setColorOptions(shuffledColors);
     setTargetColor(newTargetColor);
     setGameStatus("");
+    setAnimationClass("");
   };
 
   const handleGuess = (color) => {
     if (color === targetColor) {
       setScore(score + 1);
       setGameStatus("Correct! 🎉");
+      setAnimationClass("animate-correct");
     } else {
       setGameStatus("Wrong! Try again. ❌");
+      setAnimationClass("animate-wrong");
+      setTimeout(() => setAnimationClass(""), 500);
     }
   };
 
@@ -47,7 +52,7 @@ export default function ColorGame() {
         Guess the correct color!
       </h1>
       <div
-        className="w-40 h-40 rounded-lg shadow-lg mb-6"
+        className={`w-40 h-40 rounded-lg shadow-lg mb-6 ${animationClass}`}
         style={{ backgroundColor: targetColor }}
         data-testid="colorBox"
       ></div>

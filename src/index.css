@@ -1,3 +1,37 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Correct Guess Animation */
+@keyframes correctAnimation {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.animate-correct {
+  animation: correctAnimation 0.5s ease-in-out;
+}
+
+/* Wrong Guess Animation */
+@keyframes wrongAnimation {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.animate-wrong {
+  animation: wrongAnimation 0.5s ease-in-out;
+}
