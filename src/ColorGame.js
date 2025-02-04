@@ -33,9 +33,13 @@ export default function ColorGame() {
 
   const handleGuess = (color) => {
     if (color === targetColor) {
-      setScore(score + 1);
+      setScore((prevScore) => prevScore + 1);
       setGameStatus("Correct! 🎉");
       setAnimationClass("animate-correct");
+      setTimeout(() => {
+        setAnimationClass("");
+        startNewGame();
+      }, 1000); // Automatically start a new game after 1 second
     } else {
       setGameStatus("Wrong! Try again. ❌");
       setAnimationClass("animate-wrong");
