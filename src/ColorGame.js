@@ -16,30 +16,40 @@ export default function ColorGame() {
   const [gameStatus, setGameStatus] = useState("");
   const [colorOptions, setColorOptions] = useState([]);
   const [animationClass, setAnimationClass] = useState("");
+  const [isClickable, setIsClickable] = useState(true);
 
   useEffect(() => {
     startNewGame();
   }, []);
 
   const startNewGame = () => {
+    setScore(0);
+    generateNewColors();
+    setGameStatus("");
+    setAnimationClass("");
+  };
+
+  const generateNewColors = () => {
     const shuffledColors = [...colors].sort(() => 0.5 - Math.random());
     const newTargetColor =
       shuffledColors[Math.floor(Math.random() * shuffledColors.length)];
     setColorOptions(shuffledColors);
     setTargetColor(newTargetColor);
-    setGameStatus("");
-    setAnimationClass("");
   };
 
   const handleGuess = (color) => {
+    if (!isClickable) return;
+
     if (color === targetColor) {
       setScore((prevScore) => prevScore + 1);
       setGameStatus("Correct! 🎉");
       setAnimationClass("animate-correct");
+      setIsClickable(false);
       setTimeout(() => {
         setAnimationClass("");
-        startNewGame();
-      }, 1000); // Automatically start a new game after 1 second
+        generateNewColors();
+        setIsClickable(true);
+      }, 500);
     } else {
       setGameStatus("Wrong! Try again. ❌");
       setAnimationClass("animate-wrong");
@@ -68,6 +78,7 @@ export default function ColorGame() {
             style={{ backgroundColor: color }}
             onClick={() => handleGuess(color)}
             data-testid="colorOption"
+            disabled={!isClickable}
           ></button>
         ))}
       </div>
