@@ -16,45 +16,46 @@ export default function ColorGame() {
   const [gameStatus, setGameStatus] = useState("");
   const [colorOptions, setColorOptions] = useState([]);
   const [animationClass, setAnimationClass] = useState("");
-  const [isClickable, setIsClickable] = useState(true);
+  const [isGameOver, setIsGameOver] = useState(false);
 
   useEffect(() => {
     startNewGame();
   }, []);
 
   const startNewGame = () => {
-    setScore(0);
-    generateNewColors();
-    setGameStatus("");
-    setAnimationClass("");
-  };
-
-  const generateNewColors = () => {
     const shuffledColors = [...colors].sort(() => 0.5 - Math.random());
     const newTargetColor =
       shuffledColors[Math.floor(Math.random() * shuffledColors.length)];
     setColorOptions(shuffledColors);
     setTargetColor(newTargetColor);
+    setGameStatus("");
+    setAnimationClass("");
+    setScore(0);
+    setIsGameOver(false);
   };
 
   const handleGuess = (color) => {
-    if (!isClickable) return;
+    if (isGameOver) return;
 
     if (color === targetColor) {
       setScore((prevScore) => prevScore + 1);
       setGameStatus("Correct! 🎉");
       setAnimationClass("animate-correct");
-      setIsClickable(false);
-      setTimeout(() => {
-        setAnimationClass("");
-        generateNewColors();
-        setIsClickable(true);
-      }, 500);
+      setTimeout(() => startNewRound(), 500);
     } else {
-      setGameStatus("Wrong! Try again. ❌");
+      setGameStatus("Wrong! Game Over. ❌");
       setAnimationClass("animate-wrong");
-      setTimeout(() => setAnimationClass(""), 500);
+      setIsGameOver(true);
     }
+  };
+
+  const startNewRound = () => {
+    const shuffledColors = [...colors].sort(() => 0.5 - Math.random());
+    const newTargetColor =
+      shuffledColors[Math.floor(Math.random() * shuffledColors.length)];
+    setColorOptions(shuffledColors);
+    setTargetColor(newTargetColor);
+    setAnimationClass("");
   };
 
   return (
@@ -77,8 +78,8 @@ export default function ColorGame() {
             className="w-20 h-20 rounded-full border-2 border-gray-300 focus:outline-none focus:ring-4 focus:ring-gray-500 transition-all duration-300"
             style={{ backgroundColor: color }}
             onClick={() => handleGuess(color)}
+            disabled={isGameOver}
             data-testid="colorOption"
-            disabled={!isClickable}
           ></button>
         ))}
       </div>
